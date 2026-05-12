@@ -558,11 +558,31 @@
         if (e.key === 'Enter') { callback(); }
     }
 
+    // --- FUNZIONE DI HASH (SHA-256 semplificato per browser) ---
+    async function hashPIN(pin) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(pin);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex;
+    }
+
     // --- LOGICA LOGIN ---
-    function attemptLogin() {
+    async function attemptLogin() {
         const pass = document.getElementById('pwdInput').value.trim();
-        // Accetta sia la data con gli slash che senza
-        if (pass === "02111949" || pass === "02/11/1949") {
+        
+        // Hash precalcolati per le password corrette (usando SHA-256)
+        // Hash per "02111949"
+        const hashSenzaSlash = "e1136bdf94d7620ebcc1f37e1a3d3c7a0d421de7ab145558be9f76a6b856ab66";
+        // Hash per "02/11/1949"
+        const hashConSlash = "e0e2cb039d5e305ff64f6974db37a1f81640a2bb1fb904ca21815f9d1d58ebc7";
+        
+        // Calcola l'hash della password inserita dall'utente
+        const inputHash = await hashPIN(pass);
+
+        // Confronta l'hash inserito con quelli validi
+        if (inputHash === hashSenzaSlash || inputHash === hashConSlash) {
             document.getElementById('appHeader').classList.remove('hidden');
             hideAllViews();
             document.getElementById('view-inbox').classList.remove('hidden');
