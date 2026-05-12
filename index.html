@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebMail - Accesso Sicuro</title>
+<style>
+    body { font-family: Arial, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; padding-top: 50px; margin: 0; }
+    .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
+    h2, h3 { color: #333; }
+    input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    button { width: 100%; padding: 10px; background-color: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+    button:hover { background-color: #004494; }
+    .email-item { padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; }
+    .email-item:hover { background-color: #f9f9f9; }
+    .unread { font-weight: bold; }
+    #errore { color: red; display: none; text-align: center; margin-top: 10px; }
+    .btn-scarica { display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<!-- SCHERMATA DI LOGIN -->
+<div id="schermata-login" class="container">
+    <h2 style="text-align: center;">WebMail Privata</h2>
+    <input type="text" id="utente" placeholder="Nome utente">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="controllaLogin()">Accedi</button>
+    <p id="errore">Nome utente o password errati.</p>
+</div>
+
+<!-- CASELLA POSTALE (nascosta all'inizio) -->
+<div id="schermata-posta" class="container" style="display: none;">
+    <h2>Posta in arrivo</h2>
+    
+    <div class="email-item" onclick="alert('Corpo dell\'email: Ricordati di comprare il latte e il pane.')">
+        <span>Da: Mamma</span> <span>Oggetto: Spesa</span>
+    </div>
+    
+    <div class="email-item" onclick="alert('Corpo dell\'email: Hai vinto 1.000.000 di euro! Clicca qui (Finto SPAM)')">
+        <span>Da: Lotteria Nazionale</span> <span>Oggetto: SEI IL VINCITORE!</span>
+    </div>
+
+    <!-- QUESTA È L'EMAIL DEL TESTAMENTO -->
+    <div class="email-item unread" onclick="apriTestamento()">
+        <span>Da: Studio Notarile</span> <span>Oggetto: ⚠️ TESTAMENTO - URGENTE</span>
+    </div>
+</div>
+
+<!-- CONTENUTO EMAIL TESTAMENTO (nascosta all'inizio) -->
+<div id="schermata-testamento" class="container" style="display: none;">
+    <button style="width: auto; background-color: #666; margin-bottom: 20px;" onclick="tornaIndietro()">⬅ Torna alla posta</button>
+    <h3>Oggetto: ⚠️ TESTAMENTO - URGENTE</h3>
+    <p><strong>Da:</strong> notaio@studionotarile-falso.it</p>
+    <hr>
+    <p>Gentile assistito,</p>
+    <p>Come richiesto, in allegato le trasmetto le ultime volontà e le istruzioni da seguire. La prego di scaricare i documenti e non divulgarli a terzi.</p>
+    <p>Cordiali saluti,<br>Il Notaio</p>
+    
+    <!-- SOSTITUISCI IL LINK QUI SOTTO CON QUELLO DEL TUO FILE -->
+    <a href="INSERISCI_QUI_IL_LINK_DEL_TUO_FILE" target="_blank" class="btn-scarica">📎 Scarica Allegato (Testamento.pdf)</a>
+</div>
+
+<script>
+    function controllaLogin() {
+        let u = document.getElementById('utente').value;
+        let p = document.getElementById('password').value;
+        
+        // MODIFICA QUI NOME UTENTE E PASSWORD
+        if(u.toLowerCase() === "detective" && p === "segreto123") {
+            document.getElementById('schermata-login').style.display = "none";
+            document.getElementById('schermata-posta').style.display = "block";
+        } else {
+            document.getElementById('errore').style.display = "block";
+        }
+    }
+
+    function apriTestamento() {
+        document.getElementById('schermata-posta').style.display = "none";
+        document.getElementById('schermata-testamento').style.display = "block";
+    }
+
+    function tornaIndietro() {
+        document.getElementById('schermata-testamento').style.display = "none";
+        document.getElementById('schermata-posta').style.display = "block";
+    }
+</script>
+
+</body>
+</html>
