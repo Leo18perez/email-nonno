@@ -474,6 +474,13 @@
                     <div class="suspect-role">Figlio 2 e Partner</div>
                 </div>
 
+                <!-- Adelina -->
+                <div class="suspect-card" onclick="checkSuspect('adelina')">
+                    <i class="fa-solid fa-user-group"></i>
+                    <div class="suspect-name">Adelinda</div>
+                    <div class="suspect-role">Figlia 3</div>
+                </div>
+
                 <!-- Ambrogio -->
                 <div class="suspect-card" onclick="checkSuspect('ambrogio')">
                     <i class="fa-solid fa-user-graduate"></i>
@@ -595,6 +602,7 @@
             let msg = "Analisi errata. I documenti non supportano questa teoria.";
             if (suspectId === 'asdrubale') msg = "Sbagliato. Amilcare lo elogiava per aver salvato l'azienda.";
             if (suspectId === 'ambrogio') msg = "Sbagliato. Il padre ha appena garantito il fondo per i suoi studi.";
+            if (suspectId === 'adelinda') msg = "Sbagliato. Adelinda si è allontana per amore e viaggiare, il nonno l'ha accetto";
             showAlert(msg);
         }
     }
