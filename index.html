@@ -558,31 +558,19 @@
         if (e.key === 'Enter') { callback(); }
     }
 
-    // --- FUNZIONE DI HASH (SHA-256 semplificato per browser) ---
-    async function hashPIN(pin) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(pin);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        return hashHex;
-    }
-
     // --- LOGICA LOGIN ---
-    async function attemptLogin() {
+    function attemptLogin() {
         const pass = document.getElementById('pwdInput').value.trim();
         
-        // Hash precalcolati per le password corrette (usando SHA-256)
-        // Hash per "02111949"
-        const hashSenzaSlash = "082f22c28d6eb49299a1a1a92df8d8b343c1b6201cf24fecb63c9ebf174fe537";
-        // Hash per "02/11/1949"
-        const hashConSlash = "42fab96a10f091735cf64fded3afb591e778320ad5334103510b22f8f3342fa1";
-        
-        // Calcola l'hash della password inserita dall'utente
-        const inputHash = await hashPIN(pass);
+        // Usiamo Base64 (btoa) per nascondere la password dal codice
+        const encodedPass = btoa(pass);
 
-        // Confronta l'hash inserito con quelli validi
-        if (inputHash === hashSenzaSlash || inputHash === hashConSlash) {
+        // "MDIxMTE5NDk=" è "02111949" codificato in Base64
+        const pass1 = "MDIxMTE5NDk=";
+        // "MDIvMTEvMTk0OQ==" è "02/11/1949" codificato in Base64
+        const pass2 = "MDIvMTEvMTk0OQ==";
+
+        if (encodedPass === pass1 || encodedPass === pass2) {
             document.getElementById('appHeader').classList.remove('hidden');
             hideAllViews();
             document.getElementById('view-inbox').classList.remove('hidden');
