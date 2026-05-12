@@ -3,86 +3,611 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WebMail - Accesso Sicuro</title>
+<title>Archivio Privato - A.G.V.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-    body { font-family: Arial, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; padding-top: 50px; margin: 0; }
-    .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
-    h2, h3 { color: #333; }
-    input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    button { width: 100%; padding: 10px; background-color: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-    button:hover { background-color: #004494; }
-    .email-item { padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; justify-content: space-between; }
-    .email-item:hover { background-color: #f9f9f9; }
-    .unread { font-weight: bold; }
-    #errore { color: red; display: none; text-align: center; margin-top: 10px; }
-    .btn-scarica { display: inline-block; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+    :root {
+        --bg-color: #0d0d0d;
+        --panel-bg: #1a1a1a;
+        --border-color: #333;
+        --accent-color: #d4af37; /* Oro elegante */
+        --text-main: #e0e0e0;
+        --text-muted: #888;
+        --error-color: #e74c3c;
+        --success-color: #2ecc71;
+        --font-serif: 'Playfair Display', serif;
+        --font-sans: 'Roboto', sans-serif;
+        --font-mono: 'Courier Prime', monospace;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: var(--font-sans);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+    }
+
+    .app-container {
+        width: 100%;
+        max-width: 900px;
+        height: 90vh;
+        max-height: 800px;
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.05);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-color); }
+    ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+
+    /* Utilities */
+    .hidden { display: none !important; }
+    .text-center { text-align: center; }
+    .gold-text { color: var(--accent-color); }
+
+    /* HEADER */
+    .app-header {
+        background: #111;
+        padding: 20px 30px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .app-header h1 {
+        font-family: var(--font-serif);
+        margin: 0;
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+    }
+
+    .app-header .user-badge {
+        font-family: var(--font-mono);
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* CONTENT AREA */
+    .app-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 40px;
+        position: relative;
+    }
+
+    /* BUTTONS & INPUTS */
+    input[type="password"], input[type="text"] {
+        width: 100%;
+        padding: 15px;
+        background: rgba(0,0,0,0.5);
+        border: 1px solid #444;
+        border-radius: 6px;
+        color: white;
+        font-family: var(--font-mono);
+        font-size: 1.1rem;
+        box-sizing: border-box;
+        transition: 0.3s;
+        text-align: center;
+        letter-spacing: 2px;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    }
+
+    .btn {
+        background: linear-gradient(135deg, #b8860b 0%, #ffd700 50%, #b8860b 100%);
+        color: #000;
+        border: none;
+        padding: 15px 30px;
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        letter-spacing: 1px;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+        box-shadow: none;
+    }
+    .btn-outline:hover {
+        border-color: var(--text-main);
+        background: rgba(255,255,255,0.05);
+        color: white;
+    }
+
+    .btn-danger {
+        background: transparent;
+        color: var(--error-color);
+        border: 1px solid var(--error-color);
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.1);
+    }
+    .btn-danger:hover {
+        background: var(--error-color);
+        color: white;
+        box-shadow: 0 0 20px rgba(231, 76, 60, 0.4);
+    }
+
+    /* CUSTOM ALERT */
+    .custom-alert {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(231, 76, 60, 0.1);
+        border: 1px solid var(--error-color);
+        color: var(--error-color);
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-family: var(--font-mono);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        backdrop-filter: blur(5px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+    .custom-alert.show { opacity: 1; }
+
+    /* --- SPECIFIC SCREENS --- */
+
+    /* LOGIN */
+    .login-wrapper {
+        max-width: 400px;
+        margin: 50px auto 0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .login-icon { font-size: 4rem; color: var(--accent-color); margin-bottom: 20px; }
+
+    /* INBOX */
+    .email-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .email-row {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border-color);
+        padding: 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+        border-left: 4px solid transparent;
+    }
+    .email-row:hover {
+        background: rgba(255,255,255,0.08);
+        transform: translateX(5px);
+    }
+    .email-row.urgent { border-left-color: var(--error-color); }
+    .email-row.bank { border-left-color: #3498db; }
+    .email-row.internal { border-left-color: var(--success-color); }
+    
+    .email-sender { font-weight: bold; font-size: 1.1rem; margin-bottom: 5px; }
+    .email-subject { font-family: var(--font-serif); font-size: 1.2rem; color: var(--accent-color); }
+    .email-date { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); float: right; }
+
+    /* EMAIL READING VIEW */
+    .reading-toolbar {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 15px;
+    }
+    .email-paper {
+        background: #f4f1ea; /* Effetto carta stampata */
+        color: #111;
+        padding: 40px;
+        border-radius: 4px;
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+        line-height: 1.6;
+    }
+    .email-paper-header {
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        font-family: var(--font-mono);
+        font-size: 0.95rem;
+    }
+    .email-paper-header p { margin: 5px 0; }
+    .email-signature { font-family: var(--font-serif); font-size: 1.3rem; font-style: italic; margin-top: 40px; }
+
+    /* ACCUSATION SCREEN */
+    .suspect-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 40px;
+    }
+    .suspect-card {
+        background: rgba(0,0,0,0.3);
+        border: 1px solid var(--border-color);
+        padding: 30px 20px;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .suspect-card i { font-size: 3rem; color: #555; margin-bottom: 15px; transition: 0.3s; }
+    .suspect-card:hover {
+        background: rgba(212, 175, 55, 0.1);
+        border-color: var(--accent-color);
+    }
+    .suspect-card:hover i { color: var(--accent-color); }
+    .suspect-name { font-family: var(--font-serif); font-size: 1.2rem; font-weight: bold; }
+    .suspect-role { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; }
+
+    /* SUCCESS SCREEN */
+    .success-container { text-align: center; padding: 40px 20px; }
+    .success-icon { font-size: 5rem; color: var(--success-color); margin-bottom: 20px; }
+    .download-btn {
+        display: inline-block;
+        margin-top: 40px;
+        text-decoration: none;
+        background: #8b0000; /* Rosso ceralacca */
+        color: white;
+        padding: 15px 40px;
+        font-family: var(--font-serif);
+        font-size: 1.3rem;
+        border-radius: 4px;
+        border: 2px solid #5a0000;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        transition: 0.3s;
+    }
+    .download-btn:hover { background: #a50000; transform: scale(1.05); }
+
 </style>
 </head>
 <body>
 
-<!-- SCHERMATA DI LOGIN -->
-<div id="schermata-login" class="container">
-    <h2 style="text-align: center;">WebMail Privata</h2>
-    <input type="text" id="utente" placeholder="Nome utente">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="controllaLogin()">Accedi</button>
-    <p id="errore">Nome utente o password errati.</p>
-</div>
-
-<!-- CASELLA POSTALE (nascosta all'inizio) -->
-<div id="schermata-posta" class="container" style="display: none;">
-    <h2>Posta in arrivo</h2>
+<div class="app-container">
     
-    <div class="email-item" onclick="alert('Corpo dell\'email: Ricordati di comprare il latte e il pane.')">
-        <span>Da: Mamma</span> <span>Oggetto: Spesa</span>
-    </div>
-    
-    <div class="email-item" onclick="alert('Corpo dell\'email: Hai vinto 1.000.000 di euro! Clicca qui (Finto SPAM)')">
-        <span>Da: Lotteria Nazionale</span> <span>Oggetto: SEI IL VINCITORE!</span>
+    <!-- Custom Alert Message Box -->
+    <div id="customAlert" class="custom-alert">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span id="customAlertText">Errore!</span>
     </div>
 
-    <!-- QUESTA È L'EMAIL DEL TESTAMENTO -->
-    <div class="email-item unread" onclick="apriTestamento()">
-        <span>Da: Studio Notarile</span> <span>Oggetto: ⚠️ TESTAMENTO - URGENTE</span>
+    <!-- Header (Always visible after login) -->
+    <div class="app-header hidden" id="appHeader">
+        <h1><i class="fa-solid fa-scale-balanced gold-text"></i> Archivio A.G.V.</h1>
+        <div class="user-badge">
+            <i class="fa-solid fa-user-tie"></i> Amilcare Accolti Gil Vitale
+        </div>
     </div>
-</div>
 
-<!-- CONTENUTO EMAIL TESTAMENTO (nascosta all'inizio) -->
-<div id="schermata-testamento" class="container" style="display: none;">
-    <button style="width: auto; background-color: #666; margin-bottom: 20px;" onclick="tornaIndietro()">⬅ Torna alla posta</button>
-    <h3>Oggetto: ⚠️ TESTAMENTO - URGENTE</h3>
-    <p><strong>Da:</strong> notaio@studionotarile-falso.it</p>
-    <hr>
-    <p>Gentile assistito,</p>
-    <p>Come richiesto, in allegato le trasmetto le ultime volontà e le istruzioni da seguire. La prego di scaricare i documenti e non divulgarli a terzi.</p>
-    <p>Cordiali saluti,<br>Il Notaio</p>
-    
-    <!-- SOSTITUISCI IL LINK QUI SOTTO CON QUELLO DEL TUO FILE -->
-    <a href="INSERISCI_QUI_IL_LINK_DEL_TUO_FILE" target="_blank" class="btn-scarica">📎 Scarica Allegato (Testamento.pdf)</a>
+    <div class="app-content">
+        
+        <!-- SCREEN 1: LOGIN -->
+        <div id="view-login" class="text-center">
+            <div class="login-wrapper">
+                <i class="fa-solid fa-fingerprint login-icon"></i>
+                <h2 style="font-family: var(--font-serif); font-size: 2rem; margin: 0;">Accesso Riservato</h2>
+                <p style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.9rem;">
+                    Inserire il PIN di sicurezza (8 cifre) o la data chiave.
+                </p>
+                
+                <div style="text-align: left;">
+                    <label style="font-family: var(--font-mono); font-size: 0.8rem; color: #888;">Utente:</label>
+                    <input type="text" value="amilcare.agv" readonly style="color: #666; cursor: not-allowed; background: transparent; border-bottom: 1px solid #444; border-top: none; border-left: none; border-right: none; margin-bottom: 20px;">
+                </div>
+
+                <div style="text-align: left;">
+                    <label style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-color);">Password / PIN:</label>
+                    <input type="password" id="pwdInput" placeholder="••/••/••••" onkeypress="handleEnter(event, attemptLogin)">
+                </div>
+                
+                <button class="btn" onclick="attemptLogin()" style="margin-top: 10px;">Sblocca Terminale</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: INBOX -->
+        <div id="view-inbox" class="hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2 style="font-family: var(--font-serif); margin: 0;">Posta in Arrivo <span style="font-size: 1rem; color: var(--text-muted);">(3 messaggi decrittati)</span></h2>
+                <button class="btn btn-danger" style="padding: 10px 20px; font-size: 0.9rem;" onclick="showAccusationView()">
+                    <i class="fa-solid fa-gavel"></i> Identifica Colpevole
+                </button>
+            </div>
+
+            <div class="email-list">
+                <!-- Mail 1: Ambrogio -->
+                <div class="email-row bank" onclick="openEmail('mail-ambrogio')">
+                    <span class="email-date">14/10/2025</span>
+                    <div class="email-sender">Banca Intesa SanPaolo</div>
+                    <div class="email-subject">Conferma apertura conto corrente – Pratica n. 002938572010844</div>
+                </div>
+
+                <!-- Mail 2: Asdrubale -->
+                <div class="email-row internal" onclick="openEmail('mail-asdrubale')">
+                    <span class="email-date">03/02/2026</span>
+                    <div class="email-sender">Amilcare Accolti Gil Vitale</div>
+                    <div class="email-subject">Verbale della riunione del C.d.A. del 03/02/2026</div>
+                </div>
+
+                <!-- Mail 3: Aurelio -->
+                <div class="email-row urgent" onclick="openEmail('mail-aurelio')">
+                    <span class="email-date">18/04/2026</span>
+                    <div class="email-sender">Amilcare Accolti Gil Vitale</div>
+                    <div class="email-subject">Re: Richiesta trasferimento fondi / Caparra Villa Dubai</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: EMAIL READING -->
+        <div id="view-reading" class="hidden">
+            <div class="reading-toolbar">
+                <button class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem;" onclick="backToInbox()">
+                    <i class="fa-solid fa-arrow-left"></i> Torna alla Posta
+                </button>
+                <button class="btn btn-danger" style="padding: 8px 15px; font-size: 0.9rem;" onclick="showAccusationView()">
+                    Accusa un Sospettato <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Contenuto Mail Ambrogio -->
+            <div id="mail-ambrogio" class="email-paper hidden">
+                <div class="email-paper-header">
+                    <p><strong>Da:</strong> servizio.clienti@intesasanpaolo.com</p>
+                    <p><strong>A:</strong> amilcare.agv@agvsrl.com</p>
+                    <p><strong>Oggetto:</strong> Conferma apertura conto corrente Banca Intesa SanPaolo – Pratica n. 002938572010844</p>
+                </div>
+                <div class="email-body">
+                    <p>Gentile Amilcare Accolti Gil Vitale,</p>
+                    <p>Siamo lieti di confermarle che la sua richiesta di apertura del conto corrente <em>Fondo Studi IISF</em>, finalizzato all'erogazione del finanziamento per il percorso di studi da lei richiesto, è stata ufficialmente approvata e completata con successo.</p>
+                    <p>Di seguito le riepiloghiamo i dettagli del suo nuovo conto e le condizioni del finanziamento collegato:</p>
+                    
+                    <h4 style="margin-bottom: 5px;">Dati Identificativi del Conto Corrente</h4>
+                    <ul style="margin-top: 0;">
+                        <li><strong>Titolare del conto:</strong> Ambrogio Accolti Gil Vitale</li>
+                        <li><strong>IBAN:</strong> IT 39 A 03857 20465 0000047590112</li>
+                        <li><strong>Stato del conto:</strong> Attivo e operativo</li>
+                    </ul>
+
+                    <h4 style="margin-bottom: 5px;">Dettagli del Finanziamento Studi (Prestito d'Onore)</h4>
+                    <ul style="margin-top: 0;">
+                        <li><strong>Importo totale accordato:</strong> € 25.000,00</li>
+                        <li><strong>Modalità di erogazione:</strong> L'importo verrà accreditato sul suo nuovo conto corrente in un'unica soluzione entro le prossime 24 ore.</li>
+                        <li><strong>Periodo di preammortamento:</strong> 36 mesi (durante questo periodo non dovrà rimborsare alcuna quota capitale).</li>
+                    </ul>
+
+                    <p><strong>Prossimi Passi</strong><br>
+                    Le ricordiamo che per accedere ai servizi di Home Banking e monitorare il saldo del conto, le basterà inserire il suo Codice Cliente e il PIN temporaneo ricevuto via SMS durante la fase di riconoscimento.</p>
+                    <p>Restiamo a sua completa disposizione per qualunque chiarimento o supporto.</p>
+                    
+                    <div class="email-signature">
+                        Banca Intesa SanPaolo<br>
+                        <span style="font-size: 0.9rem; font-family: var(--font-sans); font-style: normal;">Servizio Clienti e Finanziamenti Retail</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenuto Mail Asdrubale -->
+            <div id="mail-asdrubale" class="email-paper hidden">
+                <div class="email-paper-header">
+                    <p><strong>Da:</strong> Amilcare Accolti Gil Vitale – Amministratore Delegato &lt;amilcare.agv@agvsrl.com&gt;</p>
+                    <p><strong>A:</strong> tutti</p>
+                    <p><strong>CC:</strong> Segreteria C.d.A. &lt;segreteria@agvsrl.com&gt;, Asdrubale Accolti Gil Vitale &lt;asdrubale.agv@agvsrl.com&gt;</p>
+                    <p><strong>Oggetto:</strong> Verbale della riunione del C.d.A. del 03/02/2026</p>
+                </div>
+                <div class="email-body">
+                    <p>Gentili Consiglieri,</p>
+                    <p>con la presente mail vi inoltro in allegato il verbale sintetico della riunione del Consiglio di Amministrazione tenutasi in data odierna.</p>
+                    <p>Ci tengo a sfruttare questa comunicazione per ribadire anche per iscritto quanto espresso poco fa a voce davanti al grafico del nostro andamento aziendale dell'ultimo biennio. Come tutti avete potuto vedere, dopo un periodo di stallo drammatico e preoccupante che ci ha visti pericolosamente vicini al fallimento, i nostri profitti hanno finalmente registrato un'impennata eccezionale. Siamo ufficialmente fuori dalla crisi.</p>
+                    <p>Voglio fare i miei più sentiti e personali complimenti ad <strong>Asdrubale</strong>. Se oggi l'azienda è salva, è merito esclusivo delle coraggiose strategie commerciali e delle nuove partnership che ha introdotto negli ultimi mesi. Le sue intuizioni si sono rivelate determinanti per la nostra sopravvivenza finanziaria e per questa incredibile ripresa.</p>
+                    <p>Prego la segreteria di archiviare il documento ufficiale e auguro a tutti un buon lavoro, con la certezza che continueremo su questa strada.</p>
+                    
+                    <div class="email-signature">
+                        Amilcare Accolti Gil Vitale<br>
+                        <span style="font-size: 0.9rem; font-family: var(--font-sans); font-style: normal;">Presidente & Amministratore Delegato AGV S.R.L.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenuto Mail Aurelio -->
+            <div id="mail-aurelio" class="email-paper hidden">
+                <div class="email-paper-header">
+                    <p><strong>Da:</strong> Amilcare Accolti Gil Vitale &lt;amilcare.agv@gmail.com&gt;</p>
+                    <p><strong>A:</strong> Aurelio Accolti Gil Vitale &lt;aurelioagv70@gmail.com&gt;</p>
+                    <p><strong>Oggetto:</strong> Re: Richiesta trasferimento fondi / Caparra Villa Dubai</p>
+                </div>
+                <div class="email-body">
+                    <p>Aurelio,</p>
+                    <p>ti rispondo subito e sarò molto diretto: la mia risposta è <strong>no</strong>.</p>
+                    <p>Non ho alcuna intenzione di autorizzare un trasferimento di 5 milioni di euro per coprire la semplice caparra di una villa a Dubai. È una cifra spropositata e, francamente, una spesa del tutto insensata che non ha alcuna giustificazione economica o personale.</p>
+                    <p>Ho passato mesi con tuo fratello a risanare l'azienda e a valutare ogni singolo centesimo per far ripartire i profitti, e non intendo assistere allo sperpero del patrimonio di famiglia per i tuoi capricci immobiliari. Una transazione del genere non ha senso né come investimento né come stile di vita.</p>
+                    <p>Se ritieni che questo sia il modo di gestire il denaro, significa che non hai ancora compreso il valore del lavoro e dei sacrifici fatti finora per mantenere solida questa famiglia e l'azienda.</p>
+                    <p>La questione per me è chiusa qui. Non ci saranno ulteriori discussioni in merito.</p>
+                    
+                    <div class="email-signature">
+                        Tuo Padre
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: ACCUSATION (SELECT THE CULPRIT) -->
+        <div id="view-accusation" class="hidden text-center">
+            <h2 style="font-family: var(--font-serif); color: var(--error-color); font-size: 2.2rem; margin-bottom: 10px;">Identifica il Colpevole</h2>
+            <p style="color: var(--text-muted); font-family: var(--font-mono); max-width: 600px; margin: 0 auto;">
+                In base alle informazioni raccolte nelle e-mail, chi aveva il movente più forte (legato all'eredità e al denaro) per agire contro Amilcare?
+            </p>
+            
+            <div class="suspect-grid">
+                <!-- Asdrubale -->
+                <div class="suspect-card" onclick="checkSuspect('asdrubale')">
+                    <i class="fa-solid fa-user"></i>
+                    <div class="suspect-name">Asdrubale</div>
+                    <div class="suspect-role">Figlio 1</div>
+                </div>
+
+                <!-- Aurelio e Beatrice (I COLPEVOLI) -->
+                <div class="suspect-card" onclick="checkSuspect('aurelio')">
+                    <i class="fa-solid fa-user-group"></i>
+                    <div class="suspect-name">Aurelio & Beatrice</div>
+                    <div class="suspect-role">Figlio 2 e Partner</div>
+                </div>
+
+                <!-- Un figlio fittizio per bilanciare le scelte -->
+                <div class="suspect-card" onclick="checkSuspect('fittizio')">
+                    <i class="fa-solid fa-user"></i>
+                    <div class="suspect-name">Alberto</div>
+                    <div class="suspect-role">Figlio 3</div>
+                </div>
+
+                <!-- Ambrogio -->
+                <div class="suspect-card" onclick="checkSuspect('ambrogio')">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <div class="suspect-name">Ambrogio</div>
+                    <div class="suspect-role">Figlio 4</div>
+                </div>
+            </div>
+
+            <button class="btn btn-outline" style="margin-top: 40px; padding: 10px 20px; font-size: 0.9rem;" onclick="backToInboxFromAccusation()">
+                <i class="fa-solid fa-arrow-left"></i> Annulla e torna a leggere le mail
+            </button>
+        </div>
+
+        <!-- SCREEN 5: SUCCESS / TESTAMENT -->
+        <div id="view-success" class="hidden success-container">
+            <i class="fa-solid fa-check-circle success-icon"></i>
+            <h2 style="font-family: var(--font-serif); font-size: 2.5rem; color: var(--success-color); margin-bottom: 10px;">Deduzione Corretta!</h2>
+            <p style="font-family: var(--font-mono); font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px; line-height: 1.5;">
+                Il nonno si era rifiutato di pagare la villa a Dubai.<br>Aurelio, spinto dall'avarizia, sapeva che l'unico modo per ottenere i soldi era l'eredità. Ma il testamento nasconde un segreto...
+            </p>
+            
+            <div style="border-top: 1px dashed #555; padding-top: 30px; margin-top: 20px;">
+                <h3 style="font-family: var(--font-serif); color: var(--accent-color);">Accesso al Documento Sbloccato</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Scarica il file sottostante per scoprire le ultime volontà di Amilcare A.G.V.</p>
+                
+                <!-- QUI È DOVE SI SCARICA IL PDF -->
+                <a href="testamento.pdf" target="_blank" class="download-btn">
+                    <i class="fa-solid fa-file-pdf"></i> Apri Testamento
+                </a>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <script>
-    function controllaLogin() {
-        let u = document.getElementById('utente').value;
-        let p = document.getElementById('password').value;
-        
-        // MODIFICA QUI NOME UTENTE E PASSWORD
-        if(u.toLowerCase() === "detective" && p === "segreto123") {
-            document.getElementById('schermata-login').style.display = "none";
-            document.getElementById('schermata-posta').style.display = "block";
+    // --- UTILS ---
+    function hideAllViews() {
+        document.getElementById('view-login').classList.add('hidden');
+        document.getElementById('view-inbox').classList.add('hidden');
+        document.getElementById('view-reading').classList.add('hidden');
+        document.getElementById('view-accusation').classList.add('hidden');
+        document.getElementById('view-success').classList.add('hidden');
+    }
+
+    function hideAllEmails() {
+        document.getElementById('mail-ambrogio').classList.add('hidden');
+        document.getElementById('mail-asdrubale').classList.add('hidden');
+        document.getElementById('mail-aurelio').classList.add('hidden');
+    }
+
+    function showAlert(msg) {
+        const alertBox = document.getElementById('customAlert');
+        document.getElementById('customAlertText').innerText = msg;
+        alertBox.classList.add('show');
+        setTimeout(() => {
+            alertBox.classList.remove('show');
+        }, 3000);
+    }
+
+    function handleEnter(e, callback) {
+        if (e.key === 'Enter') { callback(); }
+    }
+
+    // --- LOGICA LOGIN ---
+    function attemptLogin() {
+        const pass = document.getElementById('pwdInput').value.trim();
+        // Accetta sia la data con gli slash che senza
+        if (pass === "02111949" || pass === "02/11/1949") {
+            document.getElementById('appHeader').classList.remove('hidden');
+            hideAllViews();
+            document.getElementById('view-inbox').classList.remove('hidden');
         } else {
-            document.getElementById('errore').style.display = "block";
+            showAlert("Accesso Negato. PIN / Data errati.");
+            document.getElementById('pwdInput').value = '';
         }
     }
 
-    function apriTestamento() {
-        document.getElementById('schermata-posta').style.display = "none";
-        document.getElementById('schermata-testamento').style.display = "block";
+    // --- LOGICA NAVIGAZIONE MAIL ---
+    function openEmail(mailId) {
+        hideAllViews();
+        hideAllEmails();
+        document.getElementById('view-reading').classList.remove('hidden');
+        document.getElementById(mailId).classList.remove('hidden');
     }
 
-    function tornaIndietro() {
-        document.getElementById('schermata-testamento').style.display = "none";
-        document.getElementById('schermata-posta').style.display = "block";
+    function backToInbox() {
+        hideAllViews();
+        document.getElementById('view-inbox').classList.remove('hidden');
+    }
+
+    // --- LOGICA ACCUSA ---
+    function showAccusationView() {
+        hideAllViews();
+        document.getElementById('view-accusation').classList.remove('hidden');
+    }
+
+    function backToInboxFromAccusation() {
+        hideAllViews();
+        document.getElementById('view-inbox').classList.remove('hidden');
+    }
+
+    function checkSuspect(suspectId) {
+        if (suspectId === 'aurelio') {
+            // CORRETTO
+            hideAllViews();
+            document.getElementById('view-success').classList.remove('hidden');
+        } else {
+            // SBAGLIATO
+            let msg = "Analisi errata. I documenti non supportano questa teoria.";
+            if (suspectId === 'asdrubale') msg = "Sbagliato. Amilcare lo elogiava per aver salvato l'azienda.";
+            if (suspectId === 'ambrogio') msg = "Sbagliato. Il padre ha appena garantito il fondo per i suoi studi.";
+            showAlert(msg);
+        }
     }
 </script>
 
