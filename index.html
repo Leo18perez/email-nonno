@@ -51,18 +51,15 @@
         position: relative;
     }
 
-    /* Scrollbar */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg-color); }
     ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
 
-    /* Utilities */
     .hidden { display: none !important; }
     .text-center { text-align: center; }
     .gold-text { color: var(--accent-color); }
 
-    /* HEADER */
     .app-header {
         background: #111;
         padding: 20px 30px;
@@ -88,7 +85,6 @@
         gap: 10px;
     }
 
-    /* CONTENT AREA */
     .app-content {
         flex: 1;
         overflow-y: auto;
@@ -96,7 +92,6 @@
         position: relative;
     }
 
-    /* BUTTONS & INPUTS */
     input[type="password"], input[type="text"] {
         width: 100%;
         padding: 15px;
@@ -163,7 +158,6 @@
         box-shadow: 0 0 20px rgba(231, 76, 60, 0.4);
     }
 
-    /* CUSTOM ALERT */
     .custom-alert {
         position: absolute;
         top: 20px;
@@ -186,9 +180,6 @@
     }
     .custom-alert.show { opacity: 1; }
 
-    /* --- SPECIFIC SCREENS --- */
-
-    /* LOGIN */
     .login-wrapper {
         max-width: 400px;
         margin: 50px auto 0;
@@ -198,7 +189,6 @@
     }
     .login-icon { font-size: 4rem; color: var(--accent-color); margin-bottom: 20px; }
 
-    /* INBOX */
     .email-list {
         display: flex;
         flex-direction: column;
@@ -225,7 +215,6 @@
     .email-subject { font-family: var(--font-serif); font-size: 1.2rem; color: var(--accent-color); }
     .email-date { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); float: right; }
 
-    /* EMAIL READING VIEW */
     .reading-toolbar {
         display: flex;
         justify-content: space-between;
@@ -234,7 +223,7 @@
         padding-bottom: 15px;
     }
     .email-paper {
-        background: #f4f1ea; /* Effetto carta stampata */
+        background: #f4f1ea; 
         color: #111;
         padding: 40px;
         border-radius: 4px;
@@ -251,7 +240,6 @@
     .email-paper-header p { margin: 5px 0; }
     .email-signature { font-family: var(--font-serif); font-size: 1.3rem; font-style: italic; margin-top: 40px; }
 
-    /* ACCUSATION SCREEN */
     .suspect-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -276,14 +264,13 @@
     .suspect-name { font-family: var(--font-serif); font-size: 1.2rem; font-weight: bold; }
     .suspect-role { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; }
 
-    /* SUCCESS SCREEN */
     .success-container { text-align: center; padding: 40px 20px; }
     .success-icon { font-size: 5rem; color: var(--success-color); margin-bottom: 20px; }
     .download-btn {
         display: inline-block;
         margin-top: 40px;
         text-decoration: none;
-        background: #8b0000; /* Rosso ceralacca */
+        background: #8b0000;
         color: white;
         padding: 15px 40px;
         font-family: var(--font-serif);
@@ -301,13 +288,13 @@
 
 <div class="app-container">
     
-    <!-- Custom Alert Message Box -->
+    <!-- Avviso di errore -->
     <div id="customAlert" class="custom-alert">
         <i class="fa-solid fa-triangle-exclamation"></i>
         <span id="customAlertText">Errore!</span>
     </div>
 
-    <!-- Header (Always visible after login) -->
+    <!-- Header -->
     <div class="app-header hidden" id="appHeader">
         <h1><i class="fa-solid fa-scale-balanced gold-text"></i> Archivio A.G.V.</h1>
         <div class="user-badge">
@@ -317,7 +304,7 @@
 
     <div class="app-content">
         
-        <!-- SCREEN 1: LOGIN -->
+        <!-- SCHERMATA 1: LOGIN -->
         <div id="view-login" class="text-center">
             <div class="login-wrapper">
                 <i class="fa-solid fa-fingerprint login-icon"></i>
@@ -340,7 +327,7 @@
             </div>
         </div>
 
-        <!-- SCREEN 2: INBOX -->
+        <!-- SCHERMATA 2: POSTA IN ARRIVO -->
         <div id="view-inbox" class="hidden">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
                 <h2 style="font-family: var(--font-serif); margin: 0;">Posta in Arrivo <span style="font-size: 1rem; color: var(--text-muted);">(3 messaggi decrittati)</span></h2>
@@ -373,7 +360,7 @@
             </div>
         </div>
 
-        <!-- SCREEN 3: EMAIL READING -->
+        <!-- SCHERMATA 3: LETTURA E-MAIL -->
         <div id="view-reading" class="hidden">
             <div class="reading-toolbar">
                 <button class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem;" onclick="backToInbox()">
@@ -465,11 +452,11 @@
             </div>
         </div>
 
-        <!-- SCREEN 4: ACCUSATION (SELECT THE CULPRIT) -->
+        <!-- SCHERMATA 4: ACCUSA (SCEGLI IL COLPEVOLE) -->
         <div id="view-accusation" class="hidden text-center">
             <h2 style="font-family: var(--font-serif); color: var(--error-color); font-size: 2.2rem; margin-bottom: 10px;">Identifica il Colpevole</h2>
             <p style="color: var(--text-muted); font-family: var(--font-mono); max-width: 600px; margin: 0 auto;">
-                In base alle informazioni raccolte nelle e-mail, chi aveva il movente più forte (legato all'eredità e al denaro) per agire contro Amilcare?
+                In base alle informazioni raccolte nelle e-mail, chi aveva il movente più forte per agire contro Amilcare?
             </p>
             
             <div class="suspect-grid">
@@ -487,7 +474,7 @@
                     <div class="suspect-role">Figlio 2 e Partner</div>
                 </div>
 
-                <!-- Un figlio fittizio per bilanciare le scelte -->
+                <!-- Alberto (Fittizio) -->
                 <div class="suspect-card" onclick="checkSuspect('fittizio')">
                     <i class="fa-solid fa-user"></i>
                     <div class="suspect-name">Alberto</div>
@@ -507,19 +494,19 @@
             </button>
         </div>
 
-        <!-- SCREEN 5: SUCCESS / TESTAMENT -->
+        <!-- SCHERMATA 5: SUCCESSO E DOWNLOAD -->
         <div id="view-success" class="hidden success-container">
             <i class="fa-solid fa-check-circle success-icon"></i>
             <h2 style="font-family: var(--font-serif); font-size: 2.5rem; color: var(--success-color); margin-bottom: 10px;">Deduzione Corretta!</h2>
             <p style="font-family: var(--font-mono); font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px; line-height: 1.5;">
-                Il nonno si era rifiutato di pagare la villa a Dubai.<br>Aurelio, spinto dall'avarizia, sapeva che l'unico modo per ottenere i soldi era l'eredità. Ma il testamento nasconde un segreto...
+                Il nonno si era rifiutato di pagare la villa a Dubai.<br>Aurelio e Beatrice, spinti dall'avarizia, sapevano che l'unico modo per ottenere i soldi era l'eredità. Ma il testamento nasconde un segreto...
             </p>
             
             <div style="border-top: 1px dashed #555; padding-top: 30px; margin-top: 20px;">
                 <h3 style="font-family: var(--font-serif); color: var(--accent-color);">Accesso al Documento Sbloccato</h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem;">Scarica il file sottostante per scoprire le ultime volontà di Amilcare A.G.V.</p>
                 
-                <!-- QUI È DOVE SI SCARICA IL PDF -->
+                <!-- LINK PDF -->
                 <a href="testamento.pdf" target="_blank" class="download-btn">
                     <i class="fa-solid fa-file-pdf"></i> Apri Testamento
                 </a>
@@ -530,7 +517,7 @@
 </div>
 
 <script>
-    // --- UTILS ---
+    // Funzioni di utilità per nascondere le varie schermate
     function hideAllViews() {
         document.getElementById('view-login').classList.add('hidden');
         document.getElementById('view-inbox').classList.add('hidden');
@@ -558,29 +545,30 @@
         if (e.key === 'Enter') { callback(); }
     }
 
-    // --- LOGICA LOGIN ---
+    // --- LOGICA LOGIN CORRETTA E ANTI-SBIRCIATA ---
     function attemptLogin() {
+        // Prende il valore inserito dall'utente e rimuove gli spazi vuoti
         const pass = document.getElementById('pwdInput').value.trim();
         
-        // Usiamo Base64 (btoa) per nascondere la password dal codice
-        const encodedPass = btoa(pass);
+        // Spezzettiamo la password nel codice! 
+        // Così se i ragazzi fanno 'Trova' e cercano 02111949 non lo troveranno mai scritto per intero!
+        // Ed evitiamo i blocchi di sicurezza dei browser.
+        const passwordCorretta1 = ['0','2','1','1','1','9','4','9'].join('');
+        const passwordCorretta2 = ['0','2','/','1','1','/','1','9','4','9'].join('');
 
-        // "MDIxMTE5NDk=" è "02111949" codificato in Base64
-        const pass1 = "MDIxMTE5NDk=";
-        // "MDIvMTEvMTk0OQ==" è "02/11/1949" codificato in Base64
-        const pass2 = "MDIvMTEvMTk0OQ==";
-
-        if (encodedPass === pass1 || encodedPass === pass2) {
+        if (pass === passwordCorretta1 || pass === passwordCorretta2) {
+            // Password Corretta -> Entra
             document.getElementById('appHeader').classList.remove('hidden');
             hideAllViews();
             document.getElementById('view-inbox').classList.remove('hidden');
         } else {
+            // Password Sbagliata -> Mostra Errore
             showAlert("Accesso Negato. PIN / Data errati.");
             document.getElementById('pwdInput').value = '';
         }
     }
 
-    // --- LOGICA NAVIGAZIONE MAIL ---
+    // --- NAVIGAZIONE ---
     function openEmail(mailId) {
         hideAllViews();
         hideAllEmails();
@@ -593,7 +581,6 @@
         document.getElementById('view-inbox').classList.remove('hidden');
     }
 
-    // --- LOGICA ACCUSA ---
     function showAccusationView() {
         hideAllViews();
         document.getElementById('view-accusation').classList.remove('hidden');
@@ -604,13 +591,14 @@
         document.getElementById('view-inbox').classList.remove('hidden');
     }
 
+    // --- LOGICA ACCUSA ---
     function checkSuspect(suspectId) {
         if (suspectId === 'aurelio') {
-            // CORRETTO
+            // SCELTA CORRETTA!
             hideAllViews();
             document.getElementById('view-success').classList.remove('hidden');
         } else {
-            // SBAGLIATO
+            // SCELTE SBAGLIATE: mostriamo l'errore personalizzato
             let msg = "Analisi errata. I documenti non supportano questa teoria.";
             if (suspectId === 'asdrubale') msg = "Sbagliato. Amilcare lo elogiava per aver salvato l'azienda.";
             if (suspectId === 'ambrogio') msg = "Sbagliato. Il padre ha appena garantito il fondo per i suoi studi.";
